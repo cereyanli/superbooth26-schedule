@@ -67,7 +67,8 @@ body{font-family:var(--font);font-size:var(--fs);background:var(--bg);color:var(
 .event:hover{filter:brightness(1.12)}
 .event a{display:block;text-decoration:none;color:inherit;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--fs);font-weight:500;letter-spacing:.01em}
 .event.so{opacity:.45}
-.event.so a::before{content:'⊘ SOLD OUT · ';font-size:7px;opacity:.9;font-family:var(--font-mono);letter-spacing:.04em}
+.event.so a{display:flex;flex-direction:column;white-space:normal;overflow:hidden;text-overflow:clip;gap:1px}
+.event.so a::before{content:'⊘ SOLD OUT';display:block;font-size:7px;font-family:var(--font-mono);letter-spacing:.06em;line-height:1.3;opacity:.8}
 .event.cx{opacity:.3;text-decoration:line-through}
 .cat-stage{background:var(--f-stage);border-left:2.5px solid var(--b-stage);color:var(--c-stage)}
 .cat-workshop{background:var(--f-workshop);border-left:2.5px solid var(--b-workshop);color:var(--c-workshop)}
