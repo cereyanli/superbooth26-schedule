@@ -23,7 +23,7 @@
 body{font-family:var(--font);font-size:var(--fs);background:#eee;color:#111}
 
 /* Day tabs */
-.tabs{display:flex;gap:0;background:#111;padding:8px 8px 0;justify-content:center}
+.tabs{display:flex;gap:0;background:#111;padding:8px 8px 0;justify-content:center;position:relative}
 .tab{padding:8px 28px;cursor:pointer;background:#333;color:#aaa;font-size:12px;font-weight:600;border-radius:4px 4px 0 0;letter-spacing:.04em;transition:background .15s}
 .tab.active{background:#fff;color:#111}
 .tab:hover:not(.active){background:#444;color:#ddd}
@@ -65,6 +65,35 @@ body{font-family:var(--font);font-size:var(--fs);background:#eee;color:#111}
 .cat-evening {background:var(--f-evening); border-left:3px solid var(--c-evening); color:var(--c-evening)}
 .cat-misc    {background:var(--f-misc);    border-left:3px solid var(--c-misc);    color:var(--c-misc)}
 
+/* ── DARK THEME ──────────────────────────────────────────── */
+html.dark {
+  --c-stage:#5c9ede;   --f-stage:#0c2744;
+  --c-workshop:#5cb85c;--f-workshop:#0c2a0c;
+  --c-diy:#b07cd0;     --f-diy:#280c38;
+  --c-ambient:#e8893a; --f-ambient:#3a1400;
+  --c-radio:#3cb8a8;   --f-radio:#002822;
+  --c-misc:#8aacbc;    --f-misc:#192028;
+  --c-evening:#d05090; --f-evening:#280012;
+}
+html.dark body{background:#181818;color:#d8d8d8}
+html.dark .tab.active{background:#2d2d2d;color:#e0e0e0}
+html.dark .page-wrap{background:#222;box-shadow:0 4px 24px rgba(0,0,0,.6)}
+html.dark .page-header{border-bottom-color:#555}
+html.dark .page-header h1{color:#e0e0e0}
+html.dark .page-header .sub{color:#888}
+html.dark .page-header a{color:#6ab0f5}
+html.dark .legend{color:#aaa}
+html.dark .grid{border-color:#444}
+html.dark .cell-time{background:#262626;border-right-color:#555;border-bottom-color:#333;color:#999}
+html.dark .cell-time.hr{background:#1c1c1c;color:#ddd;border-bottom-color:#555}
+html.dark .cell-time.hf{background:#232323;color:#555}
+html.dark .cell{border-right-color:#333;border-bottom-color:#333}
+html.dark .cell.hb{border-bottom-color:#555}
+html.dark .event{border-right-color:#333;border-bottom-color:rgba(0,0,0,.4)}
+
+#theme-btn{position:absolute;right:10px;bottom:9px;background:none;border:1px solid #555;color:#aaa;cursor:pointer;padding:3px 9px;border-radius:4px;font-size:13px;line-height:1}
+#theme-btn:hover{background:#444;color:#fff}
+
 @media print{
   @page{size:A4 landscape;margin:7mm}
   .tabs{display:none}
@@ -86,6 +115,7 @@ body{font-family:var(--font);font-size:var(--fs);background:#eee;color:#111}
   <div class="tab active" onclick="showDay('thu')">Thursday May 7</div>
   <div class="tab" onclick="showDay('fri')">Friday May 8</div>
   <div class="tab" onclick="showDay('sat')">Saturday May 9</div>
+  <button id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
 </div>
 
 <!-- THURSDAY -->
@@ -143,6 +173,24 @@ body{font-family:var(--font);font-size:var(--fs);background:#eee;color:#111}
 </div>
 
 <script>
+// ── DARK THEME ────────────────────────────────────────────
+(function(){
+  const saved=localStorage.getItem('theme');
+  const prefersDark=window.matchMedia('(prefers-color-scheme:dark)').matches;
+  if(saved==='dark'||(saved===null&&prefersDark))document.documentElement.classList.add('dark');
+})();
+
+function toggleTheme(){
+  const dark=document.documentElement.classList.toggle('dark');
+  localStorage.setItem('theme',dark?'dark':'light');
+  document.getElementById('theme-btn').textContent=dark?'☀️':'🌙';
+}
+
+window.addEventListener('DOMContentLoaded',function(){
+  if(document.documentElement.classList.contains('dark'))
+    document.getElementById('theme-btn').textContent='☀️';
+});
+
 // ── TAB SWITCHING ─────────────────────────────────────────
 function showDay(day){
   document.querySelectorAll('.page-wrap').forEach(p=>p.classList.remove('active'));
