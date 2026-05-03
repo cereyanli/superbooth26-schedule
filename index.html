@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SUPERBOOTH26 – Full Event Schedule</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --col-time:46px;
+  --row-h:18px;
+  --hdr-h:44px;
+  --fs:9.5px;
+  --font:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --c-stage:#1565c0;--f-stage:#e3f2fd;
+  --c-workshop:#2e7d32;--f-workshop:#e8f5e9;
+  --c-diy:#6a1b9a;--f-diy:#f3e5f5;
+  --c-ambient:#e65100;--f-ambient:#fff3e0;
+  --c-radio:#00695c;--f-radio:#e0f2f1;
+  --c-evening:#880e4f;--f-evening:#fce4ec;
+  --c-misc:#37474f;--f-misc:#eceff1;
+}
+body{font-family:var(--font);font-size:var(--fs);background:#eee;color:#111}
+
+/* Day tabs */
+.tabs{display:flex;gap:0;background:#111;padding:8px 8px 0;justify-content:center}
+.tab{padding:8px 28px;cursor:pointer;background:#333;color:#aaa;font-size:12px;font-weight:600;border-radius:4px 4px 0 0;letter-spacing:.04em;transition:background .15s}
+.tab.active{background:#fff;color:#111}
+.tab:hover:not(.active){background:#444;color:#ddd}
+
+/* Page */
+.page-wrap{display:none;width:297mm;margin:0 auto;background:#fff;padding:5mm;box-shadow:0 4px 24px rgba(0,0,0,.2)}
+.page-wrap.active{display:block}
+
+.page-header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #111;padding-bottom:3px;margin-bottom:3px}
+.page-header h1{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.page-header .sub{font-size:8px;color:#555}
+.page-header a{color:#1565c0}
+
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:3px;font-size:7.5px}
+.li{display:flex;align-items:center;gap:3px}
+.ld{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* Grid */
+.grid{display:grid;border-top:1px solid #ccc;border-left:1px solid #ccc}
+.cell-hdr-time{height:var(--hdr-h);background:#111;color:#fff;font-size:6.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;justify-content:center;border-right:1px solid #444;border-bottom:2px solid #111}
+.cell-hdr{height:var(--hdr-h);background:#111;color:#fff;font-size:8px;font-weight:600;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2px 2px;border-right:1px solid #444;border-bottom:2px solid #111;line-height:1.2;gap:1px}
+.cell-hdr .vc{font-size:6px;opacity:.65;letter-spacing:.04em;text-transform:uppercase}
+.cell-time{background:#f5f5f5;border-right:2px solid #888;border-bottom:1px solid #e0e0e0;display:flex;align-items:center;justify-content:center;font-size:7.5px;font-weight:600;color:#333;height:var(--row-h);position:sticky;left:0;z-index:2}
+.cell-time.hr{background:#e4e4e4;font-weight:700;color:#111;border-bottom:1px solid #aaa;font-size:8px}
+.cell-time.hf{background:#efefef;font-weight:400;font-size:6.5px;color:#777}
+.cell{border-right:1px solid #e0e0e0;border-bottom:1px solid #e0e0e0;height:var(--row-h);min-width:0}
+.cell.hb{border-bottom-color:#aaa}
+.event{border-right:1px solid #e0e0e0;border-bottom:1px solid rgba(0,0,0,.12);padding:1px 3px;overflow:hidden;min-width:0}
+.event a{display:block;text-decoration:none;color:inherit;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--fs);font-weight:500}
+.event a:hover{text-decoration:underline;opacity:.8}
+.event.so{opacity:.5}
+.event.so a::before{content:'✕ ';font-size:6.5px}
+.event.cx{opacity:.4;text-decoration:line-through}
+.cat-stage   {background:var(--f-stage);   border-left:3px solid var(--c-stage);   color:var(--c-stage)}
+.cat-workshop{background:var(--f-workshop);border-left:3px solid var(--c-workshop);color:var(--c-workshop)}
+.cat-diy     {background:var(--f-diy);     border-left:3px solid var(--c-diy);     color:var(--c-diy)}
+.cat-ambient {background:var(--f-ambient); border-left:3px solid var(--c-ambient); color:var(--c-ambient)}
+.cat-radio   {background:var(--f-radio);   border-left:3px solid var(--c-radio);   color:var(--c-radio)}
+.cat-evening {background:var(--f-evening); border-left:3px solid var(--c-evening); color:var(--c-evening)}
+.cat-misc    {background:var(--f-misc);    border-left:3px solid var(--c-misc);    color:var(--c-misc)}
+
+@media print{
+  @page{size:A4 landscape;margin:7mm}
+  .tabs{display:none}
+  body{background:#fff;font-size:7pt}
+  .page-wrap{display:block!important;width:100%;margin:0;padding:0;box-shadow:none;page-break-after:always}
+  .page-wrap:last-child{page-break-after:auto}
+  :root{--col-time:36px;--row-h:13px;--hdr-h:30px;--fs:6pt}
+  .cell-hdr{font-size:5.5pt}
+  .cell-hdr .vc{font-size:4.5pt}
+  .event a{font-size:5.5pt}
+  a::after{content:none!important}
+  .legend{font-size:5.5pt}
+}
+</style>
+</head>
+<body>
+
+<div class="tabs">
+  <div class="tab active" onclick="showDay('thu')">Thursday May 7</div>
+  <div class="tab" onclick="showDay('fri')">Friday May 8</div>
+  <div class="tab" onclick="showDay('sat')">Saturday May 9</div>
+</div>
+
+<!-- THURSDAY -->
+<div class="page-wrap active" id="day-thu">
+  <div class="page-header">
+    <h1>SUPERBOOTH26 &mdash; Thursday, May 7th</h1>
+    <span class="sub">FEZ Berlin &bull; <a href="https://www.superbooth.com/en/events.html">superbooth.com/en/events.html</a></span>
+  </div>
+  <div class="legend">
+    <div class="li"><div class="ld" style="background:var(--f-stage);border:1.5px solid var(--c-stage)"></div>Stage/Concert</div>
+    <div class="li"><div class="ld" style="background:var(--f-workshop);border:1.5px solid var(--c-workshop)"></div>Workshop</div>
+    <div class="li"><div class="ld" style="background:var(--f-diy);border:1.5px solid var(--c-diy)"></div>DIY Workshop</div>
+    <div class="li"><div class="ld" style="background:var(--f-ambient);border:1.5px solid var(--c-ambient)"></div>Ambient/Continuous</div>
+    <div class="li"><div class="ld" style="background:var(--f-radio);border:1.5px solid var(--c-radio)"></div>Radio</div>
+    <div class="li"><div class="ld" style="background:var(--f-evening);border:1.5px solid var(--c-evening)"></div>Evening/Aftershow</div>
+    <div class="li"><div class="ld" style="background:#eee;border:1.5px solid #aaa;opacity:.5"></div>Sold out &nbsp; <span style="opacity:.4">✕</span> Canceled</div>
+  </div>
+  <div class="grid" id="grid-thu" style="grid-template-columns:var(--col-time) repeat(12,1fr)"></div>
+</div>
+
+<!-- FRIDAY -->
+<div class="page-wrap" id="day-fri">
+  <div class="page-header">
+    <h1>SUPERBOOTH26 &mdash; Friday, May 8th</h1>
+    <span class="sub">FEZ Berlin &bull; <a href="https://www.superbooth.com/en/events.html">superbooth.com/en/events.html</a></span>
+  </div>
+  <div class="legend">
+    <div class="li"><div class="ld" style="background:var(--f-stage);border:1.5px solid var(--c-stage)"></div>Stage/Concert</div>
+    <div class="li"><div class="ld" style="background:var(--f-workshop);border:1.5px solid var(--c-workshop)"></div>Workshop</div>
+    <div class="li"><div class="ld" style="background:var(--f-diy);border:1.5px solid var(--c-diy)"></div>DIY Workshop</div>
+    <div class="li"><div class="ld" style="background:var(--f-ambient);border:1.5px solid var(--c-ambient)"></div>Ambient/Continuous</div>
+    <div class="li"><div class="ld" style="background:var(--f-radio);border:1.5px solid var(--c-radio)"></div>Radio</div>
+    <div class="li"><div class="ld" style="background:var(--f-evening);border:1.5px solid var(--c-evening)"></div>Evening/Aftershow</div>
+    <div class="li"><div class="ld" style="background:#eee;border:1.5px solid #aaa;opacity:.5"></div>Sold out</div>
+  </div>
+  <div class="grid" id="grid-fri" style="grid-template-columns:var(--col-time) repeat(12,1fr)"></div>
+</div>
+
+<!-- SATURDAY -->
+<div class="page-wrap" id="day-sat">
+  <div class="page-header">
+    <h1>SUPERBOOTH26 &mdash; Saturday, May 9th</h1>
+    <span class="sub">FEZ Berlin &bull; <a href="https://www.superbooth.com/en/events.html">superbooth.com/en/events.html</a></span>
+  </div>
+  <div class="legend">
+    <div class="li"><div class="ld" style="background:var(--f-stage);border:1.5px solid var(--c-stage)"></div>Stage/Concert</div>
+    <div class="li"><div class="ld" style="background:var(--f-workshop);border:1.5px solid var(--c-workshop)"></div>Workshop</div>
+    <div class="li"><div class="ld" style="background:var(--f-diy);border:1.5px solid var(--c-diy)"></div>DIY Workshop</div>
+    <div class="li"><div class="ld" style="background:var(--f-ambient);border:1.5px solid var(--c-ambient)"></div>Ambient/Continuous</div>
+    <div class="li"><div class="ld" style="background:var(--f-radio);border:1.5px solid var(--c-radio)"></div>Radio</div>
+    <div class="li"><div class="ld" style="background:var(--f-evening);border:1.5px solid var(--c-evening)"></div>Evening/Aftershow</div>
+    <div class="li"><div class="ld" style="background:#eee;border:1.5px solid #aaa;opacity:.5"></div>Sold out</div>
+  </div>
+  <div class="grid" id="grid-sat" style="grid-template-columns:var(--col-time) repeat(12,1fr)"></div>
+</div>
+
+<script>
+// ── TAB SWITCHING ─────────────────────────────────────────
+function showDay(day){
+  document.querySelectorAll('.page-wrap').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('day-'+day).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ── COLUMNS ───────────────────────────────────────────────
+// col 1=Main Entrance, 2=Seebühne, 3=Strandbühne, 4=Sooper Corner,
+//     5=Auditorium, 6=Kino, 7=Workshop Room, 8=Stromkult Stage,
+//     9=DIY-Area, 10=Flinta*Area, 11=Tape Loop, 12=SooperRADIO+Waldkater
+const VENUES = [
+  ['Main','Entrance A040'],
+  ['Seebühne','Outdoor e005'],
+  ['Strandbühne','Beach Z051'],
+  ['Sooper Corner','Z025'],
+  ['Auditorium','o110'],
+  ['Kino','o113'],
+  ['Workshop Room','h305'],
+  ['Stromkult','Stage B005'],
+  ['DIY Area','o220'],
+  ['Flinta* Area','o208'],
+  ['Tape Loop','h306'],
+  ['SooperRADIO & Waldkater','Z070 / A060'],
+];
+
+const B='https://www.superbooth.com/en/events/details/';
+
+// ── EVENT DATA ────────────────────────────────────────────
+// [time, end, col(1-12), title, url, cat, soldout, canceled]
+const THU=[
+  ['10:00','11:00',1,'The Abstract Earth',B+'the-abstract-earth.html','ambient',0,0],
+  ['10:00','21:15',12,'SooperRadio: Woltersdorf & PiRadio',B+'sooperradio-radio-woltersdorf-piradio-2.html','radio',0,0],
+  ['10:00','12:00',4,'Ambient Dub Café till noon',B+'ambient-dub-cafe-till-noon-2.html','ambient',0,0],
+  ['11:00','14:00',9,'DIY Workshop - Zlob Modular',B+'diy-workshop-zlob-modular.html','diy',1,0],
+  ['11:00','14:00',9,'DIY Workshop - Tubbutec',B+'diy-workshop-tubbutec.html','diy',1,0],
+  ['11:00','12:00',10,'FLINTA* - Modular Beginners (DE)',B+'flinta-workshop-for-modular-beginners-auf-deutsch.html','workshop',1,0],
+  ['11:00','12:00',6,'Modular Beginner Workshop',B+'modular-beginner-workshop-6.html','workshop',0,0],
+  ['11:00','11:45',2,'Sacha Ketterlin',B+'sacha-ketterlin-3.html','stage',0,0],
+  ['12:00','13:30',11,'Tape Loop Workshop',B+'tapeloop-workshop-2.html','workshop',1,0],
+  ['12:30','14:00',7,'Workshop - DSP-Dealer',B+'workshop-dsp-dealer.html','workshop',0,0],
+  ['12:45','14:00',4,'LXC + Toni Wobble',B+'lxc-b2b-toni-wobble.html','stage',0,0],
+  ['13:00','13:45',2,'VMO - Volca Massaker Orchester',B+'volca-massaker-orcherster.html','stage',0,0],
+  ['13:30','13:50',5,'Modular Synthesizer Ensemble',B+'modular-synthesizer-ensemble-13.html','stage',0,0],
+  ['14:00','14:45',3,'KORG: Schwarzmann × phase8',B+'korg-berlin-live-presentation.html','stage',0,0],
+  ['14:30','14:50',6,'Gesprächskonzert - u-he',B+'gespraechskonzert-u-he-7.html','workshop',0,0],
+  ['14:45','16:00',4,'DjBadshape',B+'djbadshape.html','stage',0,0],
+  ['15:00','16:00',10,'FLINTA* - Sequencing Techniques',B+'flinta-workshop-sequencing-techniques-in-modular-synthesizers.html','workshop',1,0],
+  ['15:00','18:00',9,'DIY Workshop - LeafAudio / Thonk',B+'diy-workshop-leafaudio-3.html','diy',1,0],
+  ['15:00','15:30',8,'Stromkult: In Conv. w/ Anna Z',B+'stromkult-in-conversation-with-anna-z.html','workshop',0,0],
+  ['15:00','15:45',2,'Nika Son',B+'nika-son.html','stage',0,0],
+  ['15:30','16:30',7,'Workshop - Bitwig Studio 6',B+'workshop-bitwig-4.html','workshop',0,0],
+  ['15:30','15:50',6,'Gesprächskonzert - DSP Dealer',B+'gespraechskonzert-dsp-dealer.html','workshop',0,0],
+  ['16:00','16:45',3,'JPGR&R',B+'jpgr-r.html','stage',0,0],
+  ['16:00','17:00',5,'NI - Absynth is Back',B+'native-instruments-absynth-is-back-meet-the-creators-at-superbooth.html','workshop',0,0],
+  ['16:30','16:50',6,'Gesprächskonzert - Erica Synths',B+'gespraechskonzert-erica-synths-4.html','workshop',0,0],
+  ['16:45','18:00',4,'Banu',B+'banu.html','stage',0,0],
+  ['17:00','17:30',8,'Stromkult: SchneidersLaden Berlin',B+'stromkult-in-conversation-with-schneidersladen-berlin.html','workshop',0,0],
+  ['17:00','17:45',2,'Electric Indigo',B+'electric-indigo.html','stage',0,0],
+  ['17:30','17:50',6,'Gesprächskonzert - Ploytec',B+'gespraechskonzert-ploytec-7.html','workshop',0,0],
+  ['18:00','18:45',3,'Surgeons Girl',B+'surgeons-girl.html','stage',0,0],
+  ['18:45','20:00',4,'Alex Solman + Resom',B+'alex-solman-resom.html','evening',0,0],
+  ['19:00','19:45',2,'WSNWG [LIVE] - Rødhåd + Lady Starlight',B+'wsnwg-live-rodhad-lady-starlight.html','evening',0,0],
+  ['20:00','20:45',3,'Anna Z + J. Manuel',B+'anna-z-j-manuel.html','evening',0,0],
+  ['21:00','23:59',12,'Aftershow: Acida Dominga + Reynold',B+'aftershow-w-acida-dominga-sam-rouanet.html','evening',0,0],
+];
+
+const FRI=[
+  ['10:00','11:00',1,'The Abstract Earth',B+'the-abstract-earth-2.html','ambient',0,0],
+  ['10:00','21:15',12,'SooperRadio: Woltersdorf & PiRadio',B+'sooperradio-radio-woltersdorf-piradio-3.html','radio',0,0],
+  ['10:00','12:00',4,'Ambient Dub Café till noon',B+'ambient-dub-cafe-till-noon-3.html','ambient',0,0],
+  ['11:00','14:00',9,'DIY Workshop - Touellskouarn',B+'diy-workshop-touellskouarn-2.html','diy',1,0],
+  ['11:00','14:00',9,'DIY Workshop - Error Instruments',B+'diy-workshop-error-instruments-2.html','diy',1,0],
+  ['11:00','12:00',6,'Modular Beginner Workshop',B+'modular-beginner-workshop-5.html','workshop',0,0],
+  ['11:00','12:00',10,'FLINTA* - Modular Beginners',B+'flinta-for-modular-beginners.html','workshop',0,0],
+  ['11:00','11:45',2,'Sonia Killmann',B+'sonia-killmann.html','stage',0,0],
+  ['12:00','13:30',11,'Tape Loop Workshop',B+'tapeloop-workshop-3.html','workshop',1,0],
+  ['12:45','14:00',4,'Tony Miln',B+'tony-miln.html','stage',0,0],
+  ['13:00','13:30',8,'Stromkult: In Conv. w/ Polygonia',B+'stromkult-in-conversation-with-polygonia.html','workshop',0,0],
+  ['13:00','13:45',2,'Surgeons Girl + Diego Noguera + Oora',B+'surgeons-girl-diego-noguera-oora.html','stage',0,0],
+  ['13:30','14:30',7,'Workshop - Bitwig Performance System',B+'workshop-bitwig-3.html','workshop',0,0],
+  ['13:30','13:50',5,'Modular Synthesizer Ensemble',B+'modular-synthesizer-ensemble-12.html','stage',0,0],
+  ['14:00','14:45',3,'Die Stadt der Zukunft',B+'die-stadt-der-zukunft.html','stage',0,0],
+  ['14:00','14:30',1,'C&D - Piotr Ceglarek & Jan Dybala',B+'c-d-piotr-ceglarek-and-jan-dybala.html','stage',0,1],
+  ['14:30','14:50',6,'Gesprächskonzert - Nonlinear Labs',B+'gespraechskonzert-nonlinear-labs-4.html','workshop',0,0],
+  ['14:45','16:00',4,'Snow',B+'snow.html','stage',0,0],
+  ['15:00','15:30',8,'Stromkult: In Conv. w/ Verbos Electronics',B+'stromkult-in-conversation-with-verbos-electronics.html','workshop',0,0],
+  ['15:00','18:00',9,'DIY Workshop - Bastl / Shakmat',B+'diy-workshop-bastl-instruments.html','diy',1,0],
+  ['15:00','15:45',2,'Panic Girl',B+'panic-girl.html','stage',0,0],
+  ['15:00','16:00',10,'FLINTA* - An On Bast: Hardware Live Setups',B+'flinta-workshop-shaping-your-hardware-live-set.html','workshop',1,0],
+  ['15:30','17:00',7,'Workshop - DSP-Dealer',B+'workshop-dsp-dealer-2.html','workshop',0,0],
+  ['15:30','15:50',6,'Gesprächskonzert - FRAKnoise',B+'gespraechskonzert-fraknoise.html','workshop',0,0],
+  ['16:00','16:45',3,'Jessica Kert + cinema.av',B+'jessica-kert-4.html','stage',0,0],
+  ['16:00','16:30',1,'biøs - Jakub Mokrzysiak',B+'bios-jakub-mokrzysiak.html','stage',0,1],
+  ['16:30','16:50',6,'Gesprächskonzert - Tubbutec',B+'gespraechskonzert-tubbutec.html','workshop',0,0],
+  ['16:45','18:00',4,'Perera Elsewhere',B+'perera-elsewhere.html','stage',0,0],
+  ['17:00','17:30',8,'Stromkult: In Conv. w/ Eowave',B+'stromkult-in-conversation-with-eowave.html','workshop',0,0],
+  ['17:00','17:45',2,'Monolake',B+'monolake.html','stage',0,0],
+  ['17:30','17:50',6,'Gesprächskonzert - Weston Precision Audio',B+'gespraechskonzert-weston.html','workshop',0,0],
+  ['18:00','18:45',3,'M. Takara & Carla Boregas',B+'m-takara-carla-boregas.html','stage',0,0],
+  ['18:45','20:00',4,'Murat Tepeli',B+'murat-tepeli.html','evening',0,0],
+  ['19:00','19:45',2,'Anushka Chkheidze',B+'anushka-chkheidze.html','evening',0,0],
+  ['20:00','20:45',3,'Polygonia',B+'polygonia-2.html','evening',0,0],
+  ['21:00','23:59',12,'Aftershow: lil.lili + Resom b2b Don Williams',B+'aftershow-w-lil-lili-resom-b2b-don-williams.html','evening',0,0],
+];
+
+const SAT=[
+  ['10:00','11:00',1,'The Abstract Earth',B+'the-abstract-earth-kopie-2.html','ambient',0,0],
+  ['10:00','21:15',12,'SooperRadio: Woltersdorf & PiRadio',B+'sooperradio-radio-woltersdorf-piradio-4.html','radio',0,0],
+  ['10:00','12:00',4,'Ambient Dub Café till noon',B+'ambient-dub-cafe-till-noon-4.html','ambient',0,0],
+  ['11:00','14:00',9,'DIY Workshop - Erica & Moritz Klein',B+'diy-workshop-mkl-x-erica-synths.html','diy',1,0],
+  ['11:00','14:00',9,'DIY Workshop - ATOV',B+'diy-workshop-atov.html','diy',1,0],
+  ['11:00','11:45',2,'Andrea Cichecki',B+'andrea-cichecki.html','stage',0,0],
+  ['11:00','12:30',3,'Alexander Spree - Meet Dr. Spree',B+'alexander-spree-meet-dr-spree.html','stage',0,0],
+  ['11:00','12:00',6,'Modular Beginner Workshop',B+'modular-beginner-workshop-4.html','workshop',0,0],
+  ['11:00','12:00',10,'FLINTA* - Modular Beginners',B+'modular-beginner-workshop-for-flinta-2.html','workshop',1,0],
+  ['12:30','14:00',7,'Workshop - DSP-Dealer',B+'workshop-dsp-dealer-3.html','workshop',0,0],
+  ['12:45','14:00',4,'Aysun',B+'aysun.html','stage',0,0],
+  ['13:00','13:30',8,'Stromkult: Im Gespräch mit Doepfer',B+'stromkult-im-gespraech-mit-doepfer-musikelektronik.html','workshop',0,0],
+  ['13:00','13:45',2,'Braintheft',B+'braintheft.html','stage',0,0],
+  ['13:30','13:50',5,'Modular Synthesizer Ensemble',B+'modular-synthesizer-ensemble-11.html','stage',0,0],
+  ['14:00','15:00',1,'Youtube Fan Meetup (Wald)',B+'youtube-fan-meetup-2.html','misc',0,0],
+  ['15:00','15:30',8,'Stromkult: In Conv. w/ WMD',B+'stromkult-in-conversation-with-wmd.html','workshop',0,0],
+  ['15:00','16:00',10,'FLINTA* - Modular Beats: Drum Architecture',B+'flinta-workshop-modular-beats-sound-architecture-for-drums-2.html','workshop',1,0],
+  ['17:00','18:00',8,'Stromkult: In Conversation w/ TBA',B+'stromkult-in-conversation-with-aleksandra-slyz.html','workshop',0,0],
+  // Evening concerts from the concerts page (partial data from scrape)
+  ['14:00','14:45',3,'TBA – Strandbühne 14:00',B+'the-abstract-earth-kopie-2.html','stage',0,0],
+  ['15:00','15:45',2,'TBA – Seebühne 15:00',B+'andrea-cichecki.html','stage',0,0],
+  ['16:00','16:45',3,'TBA – Strandbühne 16:00',B+'alexander-spree-meet-dr-spree.html','stage',0,0],
+  ['16:45','18:00',4,'TBA – Sooper Corner 16:45',B+'aysun.html','stage',0,0],
+  ['17:00','17:45',2,'TBA – Seebühne 17:00',B+'andrea-cichecki.html','stage',0,0],
+  ['18:00','18:45',3,'TBA – Strandbühne 18:00',B+'alexander-spree-meet-dr-spree.html','stage',0,0],
+  ['18:45','20:00',4,'TBA – Sooper Corner 18:45',B+'aysun.html','evening',0,0],
+  ['19:00','19:45',2,'TBA – Seebühne 19:00',B+'braintheft.html','evening',0,0],
+  ['20:00','20:45',3,'TBA – Strandbühne 20:00',B+'alexander-spree-meet-dr-spree.html','evening',0,0],
+  ['21:00','23:59',12,'Aftershow – Waldkater',B+'aftershow-w-acida-dominga-sam-rouanet.html','evening',0,0],
+];
+
+// ── GRID BUILDER ──────────────────────────────────────────
+function toMins(t){const[h,m]=t.split(':').map(Number);return h*60+m}
+function snap15(m){return Math.round(m/15)*15}
+
+function buildGrid(containerId, events){
+  const grid=document.getElementById(containerId);
+  const START=toMins('10:00'), END=toMins('21:15');
+  const slots=[];
+  for(let m=START;m<END;m+=15)slots.push(m);
+  const N=slots.length;
+
+  // Map events to rows
+  const mapped=events.map(e=>{
+    const sm=snap15(toMins(e[0]));
+    const em=snap15(toMins(e[1]));
+    const ri=slots.indexOf(sm);
+    const ei=slots.indexOf(em);
+    const span=Math.max(1,(ei<0?N:ei)-ri);
+    return{row:ri<0?0:ri,span,col:e[2],title:e[3],url:e[4],cat:e[5],so:e[6],cx:e[7]};
+  });
+
+  // Headers
+  const htc=document.createElement('div');
+  htc.className='cell-hdr-time';
+  htc.style.gridRow='1';htc.style.gridColumn='1';
+  htc.textContent='TIME';
+  grid.appendChild(htc);
+
+  VENUES.forEach((v,i)=>{
+    const h=document.createElement('div');
+    h.className='cell-hdr';
+    h.style.gridRow='1';h.style.gridColumn=String(i+2);
+    h.innerHTML=`<span>${v[0]}</span><span class="vc">${v[1]}</span>`;
+    grid.appendChild(h);
+  });
+
+  // occupied[col][row]=true
+  const occ={};
+  for(let c=1;c<=12;c++)occ[c]={};
+  mapped.forEach(e=>{for(let r=e.row;r<e.row+e.span;r++)occ[e.col][r]=true});
+
+  for(let ri=0;ri<N;ri++){
+    const mins=slots[ri];
+    const h=Math.floor(mins/60),m=mins%60;
+    const isHr=m===0,isHf=m===30;
+    const label=isHr?`${String(h).padStart(2,'0')}:00`:isHf?`${String(h).padStart(2,'0')}:30`:'';
+
+    const tc=document.createElement('div');
+    tc.className='cell-time'+(isHr?' hr':isHf?' hf':'');
+    tc.style.gridRow=ri+2;tc.style.gridColumn='1';
+    tc.textContent=label;
+    grid.appendChild(tc);
+
+    for(let col=1;col<=12;col++){
+      const spanning=mapped.find(e=>e.col===col&&e.row<ri&&e.row+e.span>ri);
+      if(spanning)continue;
+
+      const here=mapped.filter(e=>e.col===col&&e.row===ri);
+
+      if(here.length===0){
+        const c=document.createElement('div');
+        c.className='cell'+(isHr?' hb':'');
+        c.style.gridRow=ri+2;c.style.gridColumn=col+1;
+        grid.appendChild(c);
+      } else if(here.length===1){
+        const e=here[0];
+        const c=document.createElement('div');
+        c.className=`event cat-${e.cat}${e.so?' so':''}${e.cx?' cx':''}`;
+        c.style.gridRow=`${ri+2}/span ${e.span}`;
+        c.style.gridColumn=col+1;
+        c.innerHTML=`<a href="${e.url}" target="_blank" title="${e.title}">${e.title}</a>`;
+        grid.appendChild(c);
+      } else {
+        const maxSpan=Math.max(...here.map(e=>e.span));
+        const w=document.createElement('div');
+        w.style.cssText=`grid-row:${ri+2}/span ${maxSpan};grid-column:${col+1};display:flex;flex-direction:column;border-right:1px solid #e0e0e0;overflow:hidden`;
+        here.forEach((e,i)=>{
+          const s=document.createElement('div');
+          s.className=`event cat-${e.cat}${e.so?' so':''}${e.cx?' cx':''}`;
+          s.style.cssText=`flex:1;border-right:none;${i>0?'border-top:1px dashed rgba(0,0,0,.2)':''}`;
+          s.innerHTML=`<a href="${e.url}" target="_blank" title="${e.title}">${e.title}</a>`;
+          w.appendChild(s);
+        });
+        grid.appendChild(w);
+      }
+    }
+  }
+}
+
+buildGrid('grid-thu',THU);
+buildGrid('grid-fri',FRI);
+buildGrid('grid-sat',SAT);
+</script>
+</body>
+</html>
